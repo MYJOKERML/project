@@ -1,0 +1,6 @@
+yolo11n-seg.pt
+yolo11n.pt
+datasets/*
+ckpt/*
+runs
+**/__pycache__

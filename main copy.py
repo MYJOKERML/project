@@ -33,13 +33,12 @@ class BoxImage():
 
 
 if __name__=='__main__':
-    model = YOLO('/home1/lujingyu/projects/AI4Science/project/runs/segment/train4/weights/best.pt')
+    model = YOLO('ckpt/n_epoch200_best.pt')
     image_path = 'datasets/contton_data/images/test/IMG_0166.jpg'
     test_results = model(image_path)
     masks = test_results[0].masks
     boxes = test_results[0].boxes
     conf = boxes.conf
-    print(conf)
     image = Image.open(image_path).convert("RGB")
     image_np = np.array(image)
     import time

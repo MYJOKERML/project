@@ -13,12 +13,12 @@ class BoxImage():
     '''
     Get the segment image from the bounding box.
     '''
-    def __init__(self, img_src: np.array, xyxy: torch.tensor, conf: torch.tensor):
+    def __init__(self, img_src: np.ndarray, xyxy: torch.Tensor, conf: torch.Tensor):
         '''
         args:
-            img_src: np.array, shape=(H, W, 3), 图像
-            xyxy: torch.tensor, shape=(1, 4), 边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
-            conf: torch.tensor, shape=(1,), 置信度
+            img_src: np.ndarray, shape=(H, W, 3), 图像
+            xyxy: torch.Tensor, shape=(1, 4), 边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
+            conf: torch.Tensor, shape=(1,), 置信度
         '''
         self.xyxy = xyxy.cpu().numpy().astype(np.int32)
         self.conf = conf.cpu().numpy()

@@ -1,6 +1,17 @@
 import os
 import json
 
+def bbox_xyxy_to_xywh(bbox):
+    '''
+    Convert bounding box format from (xmin, ymin, xmax, ymax) to (x, y, w, h)
+    '''
+    x1, y1, x2, y2 = bbox
+    x = (x1 + x2) / 2
+    y = (y1 + y2) / 2
+    w = x2 - x1
+    h = y2 - y1
+    return x, y, w, h
+
 def find_files(root, ext):
     '''
     find .xxx files in the root directory

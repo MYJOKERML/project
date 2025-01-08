@@ -2,17 +2,17 @@ from PIL import Image
 import numpy as np
 import cv2
 import torch
-def draw_masks(image: np.array, masks: np.array, save_path: str=None):
+def draw_masks(image: np.ndarray, masks: np.ndarray, save_path: str=None):
     '''
     在图像上绘制多个掩码。
 
     参数:
-        image: np.array, 形状为 (H, W, 3)，要绘制掩码的图像
-        masks: np.array, 形状为 (N, M, 2)，每个掩码由 M 个归一化的 (x, y) 坐标组成，范围 [0, 1]
+        image: np.ndarray, 形状为 (H, W, 3)，要绘制掩码的图像
+        masks: np.ndarray, 形状为 (N, M, 2)，每个掩码由 M 个归一化的 (x, y) 坐标组成，范围 [0, 1]
         save_path: str, 可选，结果图像的保存路径
 
     返回:
-        image_with_masks: np.array, 形状为 (H, W, 3)，绘制了掩码的图像
+        image_with_masks: np.ndarray, 形状为 (H, W, 3)，绘制了掩码的图像
     '''
     # 创建图像的副本
     image_with_masks = image.copy()
@@ -62,17 +62,17 @@ def draw_masks(image: np.array, masks: np.array, save_path: str=None):
 
     return image_with_masks
 
-def draw_boxes(image: np.array, boxes: torch.tensor, save_path: str=None):
+def draw_boxes(image: np.ndarray, boxes: torch.tensor, save_path: str=None):
     '''
     在图像上绘制多个边界框。
 
     参数:
-        image: np.array, 形状为 (H, W, 3)，要绘制边界框的图像
-        boxes: np.array, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
+        image: np.ndarray, 形状为 (H, W, 3)，要绘制边界框的图像
+        boxes: np.ndarray, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
         save_path: str, 可选，结果图像的保存路径
 
     返回:
-        image_with_boxes: np.array, 形状为 (H, W, 3)，绘制了边界框的图像
+        image_with_boxes: np.ndarray, 形状为 (H, W, 3)，绘制了边界框的图像
     '''
     image_with_boxes = image.copy()
     boxes = boxes.cpu().numpy().astype(np.int32)
@@ -85,18 +85,18 @@ def draw_boxes(image: np.array, boxes: torch.tensor, save_path: str=None):
 
     return image_with_boxes
 
-def draw_masks_and_boxes(image: np.array, masks: np.array, boxes: torch.tensor, save_path: str=None):
+def draw_masks_and_boxes(image: np.ndarray, masks: np.ndarray, boxes: torch.tensor, save_path: str=None):
     '''
     在图像上绘制多个掩码和边界框。
 
     参数:
-        image: np.array, 形状为 (H, W, 3)，要绘制掩码和边界框的图像
-        masks: np.array, 形状为 (N, M, 2)，每个掩码由 M 个归一化的 (x, y) 坐标组成，范围 [0, 1]
-        boxes: np.array, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
+        image: np.ndarray, 形状为 (H, W, 3)，要绘制掩码和边界框的图像
+        masks: np.ndarray, 形状为 (N, M, 2)，每个掩码由 M 个归一化的 (x, y) 坐标组成，范围 [0, 1]
+        boxes: np.ndarray, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
         save_path: str, 可选，结果图像的保存路径
 
     返回:
-        image_with_masks_and_boxes: np.array, 形状为 (H, W, 3)，绘制了掩码和边界框的图像
+        image_with_masks_and_boxes: np.ndarray, 形状为 (H, W, 3)，绘制了掩码和边界框的图像
     '''
     image_with_masks_and_boxes = image.copy()
     image_with_masks = draw_masks(image, masks)
@@ -108,19 +108,19 @@ def draw_masks_and_boxes(image: np.array, masks: np.array, boxes: torch.tensor, 
 
     return image_with_masks_and_boxes
 
-def draw_masks_and_boxes_with_conf(image: np.array, masks: np.array, boxes: torch.tensor, conf: torch.tensor, save_path: str=None):
+def draw_masks_and_boxes_with_conf(image: np.ndarray, masks: np.ndarray, boxes: torch.Tensor, conf: torch.Tensor, save_path: str=None):
     '''
     在图像上绘制多个掩码、边界框和置信度。
 
     参数:
-        image: np.array, 形状为 (H, W, 3)，要绘制掩码、边界框和置信度的图像
-        masks: np.array, 形状为 (N, M, 2)，每个掩码由 M 个归一化的 (x, y) 坐标组成，范围 [0, 1]
-        boxes: np.array, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
-        conf: torch.tensor, 形状为 (N,)，每个边界框的置信度
+        image: np.ndarray, 形状为 (H, W, 3)，要绘制掩码、边界框和置信度的图像
+        masks: np.ndarray, 形状为 (N, M, 2)，每个掩码由 M 个归一化的 (x, y) 坐标组成，范围 [0, 1]
+        boxes: torch.Tensor, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
+        conf: torch.Tensor, 形状为 (N,)，每个边界框的置信度
         save_path: str, 可选，结果图像的保存路径
 
     返回:
-        image_with_masks_and_boxes_and_conf: np.array, 形状为 (H, W, 3)，绘制了掩码、边界框和置信度的图像
+        image_with_masks_and_boxes_and_conf: np.ndarray, 形状为 (H, W, 3)，绘制了掩码、边界框和置信度的图像
     '''
     image_with_masks_and_boxes = draw_masks_and_boxes(image, masks, boxes)
     conf = conf.cpu().numpy()
@@ -133,18 +133,18 @@ def draw_masks_and_boxes_with_conf(image: np.array, masks: np.array, boxes: torc
 
     return image_with_masks_and_boxes
 
-def draw_conf(image: np.array, boxes: torch.tensor, conf: torch.tensor, save_path: str=None):
+def draw_conf(image: np.ndarray, boxes: torch.Tensor, conf: torch.Tensor, save_path: str=None):
     '''
     在图像上绘制置信度。
 
     参数:
-        image: np.array, 形状为 (H, W, 3)，要绘制置信度的图像
-        boxes: np.array, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
-        conf: torch.tensor, 形状为 (N,)，每个边界框的置信度
+        image: np.ndarray, 形状为 (H, W, 3)，要绘制置信度的图像
+        boxes: torch.Tensor, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
+        conf: torch.Tensor, 形状为 (N,)，每个边界框的置信度
         save_path: str, 可选，结果图像的保存路径
 
     返回:
-        image_with_conf: np.array, 形状为 (H, W, 3)，绘制了置信度的图像
+        image_with_conf: np.ndarray, 形状为 (H, W, 3)，绘制了置信度的图像
     '''
     image_with_conf = image.copy()
     boxes = boxes.cpu().numpy().astype(np.int32)
@@ -158,18 +158,18 @@ def draw_conf(image: np.array, boxes: torch.tensor, conf: torch.tensor, save_pat
 
     return image_with_conf
 
-def draw_boxes_with_conf(image: np.array, boxes: torch.tensor, conf: torch.tensor, save_path: str=None):
+def draw_boxes_with_conf(image: np.ndarray, boxes: torch.Tensor, conf: torch.Tensor, save_path: str=None):
     '''
     在图像上绘制边界框和置信度。
 
     参数:
-        image: np.array, 形状为 (H, W, 3)，要绘制边界框和置信度的图像
-        boxes: np.array, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
-        conf: torch.tensor, 形状为 (N,)，每个边界框的置信度
+        image: np.ndarray, 形状为 (H, W, 3)，要绘制边界框和置信度的图像
+        boxes: torch.Tensor, 形状为 (N, 4)，每个边界框由 (x1, y1, x2, y2) 坐标组成，坐标为整数
+        conf: torch.Tensor, 形状为 (N,)，每个边界框的置信度
         save_path: str, 可选，结果图像的保存路径
 
     返回:
-        image_with_box_and_conf: np.array, 形状为 (H, W, 3)，绘制了边界框和置信度的图像
+        image_with_box_and_conf: np.ndarray, 形状为 (H, W, 3)，绘制了边界框和置信度的图像
     '''
     image_with_box_and_conf = image.copy()
     boxes = boxes.cpu().numpy().astype(np.int32)
@@ -184,18 +184,18 @@ def draw_boxes_with_conf(image: np.array, boxes: torch.tensor, conf: torch.tenso
 
     return image_with_box_and_conf
 
-def draw_masks_with_conf( image: np.array, masks: np.array, conf: torch.tensor, save_path: str=None):
+def draw_masks_with_conf( image: np.ndarray, masks: np.ndarray, conf: torch.Tensor, save_path: str=None):
     '''
     在图像上绘制掩码和置信度。
 
     参数:
-        image: np.array, 形状为 (H, W, 3)，要绘制掩码和置信度的图像
-        masks: np.array, 形状为 (N, M, 2)，每个掩码由 M 个归一化的 (x, y) 坐标组成，范围 [0, 1]
-        conf: torch.tensor, 形状为 (N,)，每个边界框的置信度
+        image: np.ndarray, 形状为 (H, W, 3)，要绘制掩码和置信度的图像
+        masks: np.ndarray, 形状为 (N, M, 2)，每个掩码由 M 个归一化的 (x, y) 坐标组成，范围 [0, 1]
+        conf: torch.Tensor, 形状为 (N,)，每个边界框的置信度
         save_path: str, 可选，结果图像的保存路径
 
     返回:
-        image_with_mask_and_conf: np.array, 形状为 (H, W, 3)，绘制了掩码和置信度的图像
+        image_with_mask_and_conf: np.ndarray, 形状为 (H, W, 3)，绘制了掩码和置信度的图像
     '''
     image_with_mask = draw_masks(image, masks)
     conf = conf.cpu().numpy()

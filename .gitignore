@@ -1,6 +1,6 @@
 datasets/*
 ckpt/*
-runs
+runs*
 **/__pycache__
 yolo11*
 result*

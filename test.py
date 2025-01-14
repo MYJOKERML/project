@@ -4,14 +4,14 @@ from ultralytics import YOLO
 # Load a model
 # model = YOLO("yolo11n-seg.yaml")  # build a new model from YAML
 # model = YOLO("/home1/lujingyu/projects/AI4Science/project/runs/segment/train3/weights/best.pt")  # load a pretrained model (recommended for training)
-config_path = 'configs/data/contton_masked.yaml'
-model_scale = 'yolo11n'
+config_path = '/home1/lujingyu/projects/AI4Science/project/configs/data/true_leaves.yaml'
+model_scale = 'yolo11m'
 model = YOLO(f'{model_scale}-seg.yaml', task='segment').load(f"{model_scale}-seg.pt")  # build from YAML and transfer weights
 
 # Train the model
 imgsz = 256
 results = model.train(data=config_path, epochs=500, imgsz=imgsz, batch=64)
-test_results = model('datasets/contton_data_masked/images/test/IMG_0166_1.jpg')
+test_results = model('datasets/ableaves_data_masked/images/val/IMG_1080_6.jpg')
 # Process results list
 for result in test_results:
     boxes = result.boxes  # Boxes object for bounding box outputs
@@ -21,7 +21,7 @@ for result in test_results:
     obb = result.obb  # Oriented boxes object for OBB outputs
     print(boxes.conf)
     # result.show()  # display to screen
-    result.save(filename=f"results/result_{model_scale}_{imgsz}.jpg")  # save to disk
+    result.save(filename=f"result_{model_scale}_{imgsz}.jpg")  # save to disk
 
 
 # import matplotlib.pyplot as plt

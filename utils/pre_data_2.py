@@ -1,10 +1,11 @@
-from modules.mask_leaves import extract_masked_image
+from utils.mask_leaves import extract_masked_image
 from utils.mask_to_bbox import mask_to_bbox
 import json
 import os
 import glob
 from PIL import Image
 import numpy as np
+import yaml
 
 DATAROOT = '/home1/lujingyu/projects/AI4Science/project/datasets/contton_ori'
 class DataProcessor:
@@ -144,22 +145,28 @@ class DataProcessor:
                             f.write(f'{class_id} {mask}\n')
 
         print(f'{img_name} has been processed. Total {len(meta_info["leaves"])} leaves.')
-    def save_config(self, save_root):
-        config = {
-            'classes': ['true leaf', 'abnormal leaf', 'chill spot'],
-            'num_classes': 3,
-            'train': os.path.join(save_root, 'images', 'train'),
-            'val': os.path.join(save_root, 'images', 'val'),
-            'train_label': os.path.join(save_root, 'labels', 'train'),
-            'val_label': os.path.join(save_root, 'labels', 'val')
+    
+    def save_config(self, save_root, yaml_path):
+        data = {
+            'path': save_root,
+            'train': 'images/train',
+            'val': 'images/val',
+            'names': {
+                0: 'trueleaf',
+            }
         }
-        with open(os.path.join(save_root, 'config.json'), 'w') as f:
-            json.dump(config, f, indent=4)
+
+        # 将内容保存到YAML文件
+        with open(yaml_path, 'w') as file:
+            yaml.dump(data, file, default_flow_style=False, allow_unicode=True)
 
     def normalize(self, x, y, W, H):
         return x/W, y/H
 
     def get_labels(self, leaf):
+        '''
+        Return class_ids and masks of one leaf
+        '''
         bbox = leaf['box']
         x1, y1, x2, y2 = bbox
         class_ids = []
@@ -167,7 +174,7 @@ class DataProcessor:
         for shape in self.data['shapes']:
             label = shape['label']
             class_id = self.pre_class_id(label)
-            if class_id == 0:
+            if class_id in [0, 2, 3]:
                 continue
             points = shape['points']
             xys_ori = np.array(points)
@@ -177,7 +184,8 @@ class DataProcessor:
             sub_bbox = mask_to_bbox(xys, (self.data['imageHeight'], self.data['imageWidth']))
 
             if sub_bbox[0] >= x1 and sub_bbox[1] >= y1 and sub_bbox[2] <= x2 and sub_bbox[3] <= y2:
-                class_ids.append(class_id-1)
+                # class_ids.append(class_id-1)
+                class_ids.append(0)
                 # mask 是相对于 bbox 的坐标
                 xys_rel = np.zeros_like(xys_ori)
                 xys_rel[:, 0] = (xys_ori[:, 0] - x1) / (x2 - x1)
@@ -188,19 +196,19 @@ class DataProcessor:
         return class_ids, masks
         
 if __name__=='__main__':
-    save_root = 'datasets/contton_data_masked'
+    save_root = 'datasets/true_leaves_data'
     os.makedirs(save_root, exist_ok=True)
     json_files = glob.glob(os.path.join(DATAROOT, '*.json'))
     # test_json = '/home1/lujingyu/projects/AI4Science/project/datasets/contton_ori/IMG_0167.json'
     # data_processor = DataProcessor(test_json, DATAROOT)
     # meta_info_path = data_processor.save_masked_image_with_meta_info(save_root)
     # data_processor.make_cropped_data(meta_info_path, save_root, split_type='train')
-    train_ratio = 0.8
-    val_ratio = 0.15
-    test_ratio = 0.05
+    train_ratio = 0.98
+    val_ratio = 0.02
+    # test_ratio = 0.05
     train_num = int(len(json_files) * train_ratio)
-    val_num = int(len(json_files) * val_ratio)
-    test_num = len(json_files) - train_num - val_num
+    val_num = len(json_files) - train_num
+    test_num = 0
     for i, json_file in enumerate(json_files):
         if i < train_num:
             split_type = 'train'
@@ -211,3 +219,4 @@ if __name__=='__main__':
         data_processor = DataProcessor(json_file, DATAROOT)
         meta_info_path = data_processor.save_masked_image_with_meta_info(save_root)
         data_processor.make_cropped_data(meta_info_path, save_root, split_type=split_type)
+        data_processor.save_config(save_root, 'configs/data/true_leaves.yaml')
